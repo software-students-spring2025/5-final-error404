@@ -9,7 +9,7 @@ DB_URI = os.getenv("URI")
 DB_NAME = os.getenv("DBNAME")
 
 client = MongoClient(DB_URI)
-db = client(DB_NAME)
+db = client[DB_NAME]
 
 app = Flask(__name__, template_folder="templates")
 
