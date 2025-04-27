@@ -1,5 +1,15 @@
+import os
 from flask import Flask, render_template, request
+from pymongo.mongo_client import MongoClient
+from dotenv import load_dotenv
 import requests
+
+load_dotenv()
+DB_URI = os.getenv("URI")
+DB_NAME = os.getenv("DBNAME")
+
+client = MongoClient(DB_URI)
+db = client(DB_NAME)
 
 app = Flask(__name__, template_folder="templates")
 
