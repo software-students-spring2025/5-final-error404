@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from pymongo.mongo_client import MongoClient
 from dotenv import load_dotenv
 import requests
@@ -85,6 +85,16 @@ def search_books():
 
     return render_template("searches.html", books=books)
 
+# Displays saved books
+@app.route("/library")
+def library():
+    books = []
+    return render_template("category.html", books=books)
+
+# Update Book Category
+@app.route("/library/<book_id>/category", methods=["POST"])
+def update_category(book_id):
+    return redirect(url_for("view_library"))
 
 if __name__ == "__main__":
     app.run(debug=True)
