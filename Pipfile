@@ -1,0 +1,31 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+black = "*"
+blinker = "*"
+certifi = "*"
+charset-normalizer = "*"
+click = "*"
+coverage = "*"
+flask = "*"
+idna = "*"
+itsdangerous = "*"
+jinja2 = "*"
+markupsafe = "*"
+mypy-extensions = "*"
+packaging = "*"
+pathspec = "*"
+platformdirs = "*"
+requests = "*"
+urllib3 = "*"
+werkzeug = "*"
+dotenv = "*"
+pymongo = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"
