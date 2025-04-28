@@ -6,6 +6,14 @@
     <script src= "https://unpkg.com/@ericblade/quagga2@1.2.6/dist/quagga.js"></script>
 </head>
 <body>
+    <form action="{{ url_for('logout') }}" method="get">
+        <button type="submit">Logout</button>
+    </form>
+
+    <form action="{{ url_for('library') }}" method="get" style="display:inline;">
+        <button type="submit">Go to My Library</button>
+    </form>
+    
     <h2>Scan the Barcode on the Back of a Book!</h2>    
 
     <div>
@@ -16,9 +24,6 @@
     <div id = "scanner" style="width: 100%; height: 100%;"></div>
 
     <div id="book-display" style="margin-top: 20px;"></div><hr>
-
-    <h2>My List</h2>
-    <div id="my-list" style="display: flex; flex-wrap: wrap; gap: 20px;"></div>
     
     <!-- This is where the scanner is handled via Quagga -->
     <script>
@@ -71,7 +76,16 @@
                             <p><strong>Author(s):</strong> ${book.authors.join(", ")}</p>
                             ${book.cover ? `<img src="${book.cover}" alt="Cover of ${book.title}" style="width: 100%; height: auto;">` : ""}
                             <p><em>Source: ${book.source}</em></p>
+
+                            <form action="/save_book" method="POST">
+                                <input type="hidden" name="title" value="${book.title}">
+                                ${book.authors.map(author => `<input type="hidden" name="authors" value="${author}">`).join("")}
+                                <input type="hidden" name="isbn" value="${book.isbn}">
+                                <input type="hidden" name="cover" value="${book.cover}">
+                                <button type="submit">Save to Library</button>
+                            </form>
                         `;
+
                         myList.appendChild(card);
                     })
                     .catch(error => {
@@ -112,7 +126,16 @@
                     <p><strong>Author(s):</strong> ${book.authors.join(", ")}</p>
                     ${book.cover ? `<img src="${book.cover}" alt="Cover of ${book.title}" style="width: 100%; height: auto;">` : ""}
                     <p><em>Source: ${book.source}</em></p>
+
+                    <form action="/save_book" method="POST">
+                        <input type="hidden" name="title" value="${book.title}">
+                        ${book.authors.map(author => `<input type="hidden" name="authors" value="${author}">`).join("")}
+                        <input type="hidden" name="isbn" value="${book.isbn}">
+                        <input type="hidden" name="cover" value="${book.cover}">
+                        <button type="submit">Save to Library</button>
+                    </form>
                 `;
+
                 myList.appendChild(card);
 
                 const container = document.getElementById("book-display");

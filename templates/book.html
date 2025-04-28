@@ -11,5 +11,16 @@
   {% else %}
     <p>No cover image available.</p>
   {% endif %}
+
+  <form action="{{ url_for('save_book') }}" method="POST">
+    <input type="hidden" name="title" value="{{ book.title }}">
+    {% for author in book.authors %}
+        <input type="hidden" name="authors" value="{{ author }}">
+    {% endfor %}
+    <input type="hidden" name="isbn" value="{{ book.isbn }}">
+    <input type="hidden" name="cover" value="{{ book.cover }}">
+    <button type="submit">Save to Library</button>
+</form>
+
 </body>
 </html>
