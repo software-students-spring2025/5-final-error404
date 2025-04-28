@@ -63,6 +63,8 @@ def search_books():
         title = result.get("title")
         authors = result.get("author_name", [])
         cover_id = result.get("cover_i")
+        isbn_list = result.get("isbn", [])
+        isbn = isbn_list[0] if isbn_list else None
 
         if title and authors:
             book = {
@@ -73,6 +75,7 @@ def search_books():
                     if cover_id
                     else None
                 ),
+                "isbn": isbn,
                 "source": "Searched",
             }
             books.append(book)

@@ -55,6 +55,10 @@
                         const card = document.createElement("div");
                         card.classList.add("book-card");
 
+                        if (book.isbn){
+                            card.id = book.isbn;
+                        }
+
                         card.style.border = "1px solid #ddd";
                         card.style.padding = "10px";
                         card.style.marginBottom = "15px";
@@ -106,7 +110,7 @@
                 card.innerHTML = `
                     <h3>${book.title}</h3>
                     <p><strong>Author(s):</strong> ${book.authors.join(", ")}</p>
-                    ${book.cover ? `<img src="${book.cover}" alt="Cover of ${book.title} style="width: 100%; height: auto;">` : ""}
+                    ${book.cover ? `<img src="${book.cover}" alt="Cover of ${book.title}" style="width: 100%; height: auto;">` : ""}
                     <p><em>Source: ${book.source}</em></p>
                 `;
                 myList.appendChild(card);
