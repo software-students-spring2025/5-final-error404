@@ -1,61 +1,97 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Library</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    </head>
+<head>
+    <title>Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
 
-    <body>
-        <header>
-            <div class="container">
-                <h1>Virtual Library</h1>
-                <nav>
-                    <ul>
-                        <li><a href="{{ url_for('library') }}">Library</a></li>
-                        <li><a href="{{ url_for('index') }}">Scan</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
+<body>
 
-        <main class="container">
-            <!-- Show Books -->
-            <form class="filter" method="get">
-                <label for="category">Show:</label>
-                <select name="category" id="category">
-                    <option value="" {% if not selected %}selected{% endif %}>All</option>
-                    <option value="want_to_read" {% if selected=="want_to_read" %}selected{% endif %}>Want To Read</option>
-                    <option value="read" {% if selected=="read" %}selected{% endif %}>Books Read</option>
-                </select>
-                <button type="submit">Filter</button>
-            </form>
-            <div id="list">
-                {% for book in books %}
-                <div class="book" data-category="{{ book.category }}">
+    <header>
+        <div class="container">
+            <h1>Virtual Library</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('library') }}">Library</a></li>
+                    <li><a href="{{ url_for('scanner') }}">Scan</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+      
+        <form action="{{ url_for('scanner') }}" method="get" style="display: inline;">
+            <button type="submit">Go to Scanner</button>
+        </form>
+
+        <!-- Show Books Filter -->
+        <div class="filter" style="margin-top: 10px;">
+            <label for="category">Show:</label>
+            <select id="category">
+                <option value="">All</option>
+                <option value="want_to_read">Want To Read</option>
+                <option value="read">Books Read</option>
+            </select>
+        </div>
+
+
+        <div id="list">
+            {% for book in books %}
+            <div class="book-container" data-category="{{ book.category }}" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <!-- Book Info -->
+                <div class="book">
                     <h3>{{ book.title }}</h3>
-                    <p class="author"><strong>Author:</strong> {{ book.author }}</p>
-                    {% if book.notes %}
-                    <p class="notes"><strong>Notes:</strong> {{ book.notes }}</p>
-                    {% endif %}
+                    <p><strong>Author(s):</strong> {{ ", ".join(book.authors) }}</p>
+                    <p><strong>Category:</strong>
+                        {% if book.category == 'want_to_read' %}
+                            Want to Read
+                        {% elif book.category == 'read' %}
+                            Books Read
+                        {% else %}
+                            Not Set
+                        {% endif %}
+                    </p>
                 </div>
-    
-                <!-- Update Book Category -->
-                <form action="{{ url_for('update_category', book_id=book.book_id)  }}" method="post" class="form">
+
+
+                <form action="{{ url_for('update_category', book_id=book._id|string) }}" method="post" class="form" style="margin-top: 10px;">
                     <label for="{{ loop.index }}">Category:</label>
                     <select name="category" id="{{ loop.index }}">
-                        <option value="want_to_read" 
-                        {% if book.category == 'want_to_read' %}selected{% endif %}>
-                        Want To Read
-                    </option>
-                    <option value="read" 
-                        {% if book.category == 'read' %}selected{% endif %}>
-                        Books Read
-                    </option>
+                        <option value="want_to_read" {% if book.category == 'want_to_read' %}selected{% endif %}>Want To Read</option>
+                        <option value="read" {% if book.category == 'read' %}selected{% endif %}>Books Read</option>
                     </select>
                     <button type="submit">Update</button>
                 </form>
             </div>
             {% endfor %}
-        </main>
-    </body>
+        </div>
+
+    </main>
+
+
+    <script>
+        const categorySelect = document.getElementById('category');
+        const bookContainers = document.querySelectorAll('.book-container');
+
+        function filterBooks() {
+            const selectedCategory = categorySelect.value;
+
+            bookContainers.forEach(container => {
+                const bookCategory = container.getAttribute('data-category');
+
+                if (selectedCategory === "" || bookCategory === selectedCategory) {
+                    container.style.display = "block";
+                } else {
+                    container.style.display = "none";
+                }
+            });
+        }
+
+        categorySelect.addEventListener('change', filterBooks);
+        window.addEventListener('DOMContentLoaded', filterBooks);
+    </script>
+
+</body>
 </html>

@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+
   <header>
     <div class="container">
       <h1>Virtual Library</h1>
@@ -14,7 +15,7 @@
               <li><a href="{{ url_for('index') }}">Scan</a></li>
           </ul>
       </nav>
-  </div>
+    </div>
   </header>
 
   <main class="container">
@@ -22,11 +23,22 @@
       <p><strong>{{ book.title }}</strong></p>
       <p><strong>Author(s):</strong> {{ ", ".join(book.authors) }}</p>
       {% if book.cover %}
-      <img src="{{ book.cover }}" alt="Cover of {{ book.title }} ">
+        <img src="{{ book.cover }}" alt="Cover of {{ book.title }} ">
       {% else %}
-      <p>No cover image available.</p>
+        <p>No cover image available.</p>
       {% endif %}
+      
+      <form action="{{ url_for('save_book') }}" method="POST">
+        <input type="hidden" name="title" value="{{ book.title }}">
+        {% for author in book.authors %}
+            <input type="hidden" name="authors" value="{{ author }}">
+        {% endfor %}
+        <input type="hidden" name="isbn" value="{{ book.isbn }}">
+        <input type="hidden" name="cover" value="{{ book.cover }}">
+        <button type="submit">Save to Library</button>
+      </form>
     </div>
   </main>
+
 </body>
 </html>
