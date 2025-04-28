@@ -2,45 +2,60 @@
 <html>
     <head>
         <title>Library</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
 
     <body>
-        <h1>My Library</h1>
-        <!-- Show Books -->
-        <div class="filter">
-            <label for="category">Show:</label>
-            <select id="category">
-                <option value="">All</option>
-                <option value="want_to_read">Want To Read</option>
-                <option value="read">Books Read</option>
-            </select>
-        </div>
-        <div id="list">
-            {% for book in books %}
-            <div class="book" data-category="{{ book.category }}">
-                <h3>{{ book.title }}</h3>
-                <p class="author"><strong>Author:</strong> {{ book.author }}</p>
-                {% if book.notes %}
-                <p class="notes"><strong>Notes:</strong> {{ book.notes }}</p>
-                {% endif %}
+        <header>
+            <div class="container">
+                <h1>Virtual Library</h1>
+                <nav>
+                    <ul>
+                        <li><a href="{{ url_for('library') }}">Library</a></li>
+                        <li><a href="{{ url_for('index') }}">Scan</a></li>
+                    </ul>
+                </nav>
             </div>
+        </header>
 
-            <!-- Update Book Category -->
-            <form action="{{ url_for('update_category', book_id=book.book_id)  }}" method="post" class="form">
-                <label for="{{ loop.index }}">Category:</label>
-                <select name="category" id="{{ loop.index }}">
-                    <option value="want_to_read" 
-                    {% if book.category == 'want_to_read' %}selected{% endif %}>
-                    Want To Read
-                </option>
-                <option value="read" 
-                    {% if book.category == 'read' %}selected{% endif %}>
-                    Books Read
-                </option>
+        <main class="container">
+            <!-- Show Books -->
+            <form class="filter" method="get">
+                <label for="category">Show:</label>
+                <select name="category" id="category">
+                    <option value="" {% if not selected %}selected{% endif %}>All</option>
+                    <option value="want_to_read" {% if selected=="want_to_read" %}selected{% endif %}>Want To Read</option>
+                    <option value="read" {% if selected=="read" %}selected{% endif %}>Books Read</option>
                 </select>
-                <button type="submit">Update</button>
+                <button type="submit">Filter</button>
             </form>
-        </div>
-        {% endfor %}
+            <div id="list">
+                {% for book in books %}
+                <div class="book" data-category="{{ book.category }}">
+                    <h3>{{ book.title }}</h3>
+                    <p class="author"><strong>Author:</strong> {{ book.author }}</p>
+                    {% if book.notes %}
+                    <p class="notes"><strong>Notes:</strong> {{ book.notes }}</p>
+                    {% endif %}
+                </div>
+    
+                <!-- Update Book Category -->
+                <form action="{{ url_for('update_category', book_id=book.book_id)  }}" method="post" class="form">
+                    <label for="{{ loop.index }}">Category:</label>
+                    <select name="category" id="{{ loop.index }}">
+                        <option value="want_to_read" 
+                        {% if book.category == 'want_to_read' %}selected{% endif %}>
+                        Want To Read
+                    </option>
+                    <option value="read" 
+                        {% if book.category == 'read' %}selected{% endif %}>
+                        Books Read
+                    </option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
+            {% endfor %}
+        </main>
     </body>
 </html>
