@@ -9,7 +9,9 @@
 
     <header>
         <div class="container">
-            <h1>Virtual Library</h1>
+            <h1 class="page-title">Virtual Library</h1>
+        </div>
+        <div class="container">
             <nav>
                 <ul>
                     <li><a href="{{ url_for('library') }}">Library</a></li>
@@ -18,15 +20,11 @@
             </nav>
         </div>
     </header>
+    
 
     <main class="container">
 
-      
-        <form action="{{ url_for('scanner') }}" method="get" style="display: inline;">
-            <button type="submit">Go to Scanner</button>
-        </form>
-
-        <!-- Show Books Filter -->
+        
         <div class="filter" style="margin-top: 10px;">
             <label for="category">Show:</label>
             <select id="category">
@@ -56,14 +54,16 @@
                 </div>
 
 
-                <form action="{{ url_for('update_category', book_id=book._id|string) }}" method="post" class="form" style="margin-top: 10px;">
+                <form action="{{ url_for('update_category', book_id=book._id|string) }}" method="post" class="form">
                     <label for="{{ loop.index }}">Category:</label>
                     <select name="category" id="{{ loop.index }}">
                         <option value="want_to_read" {% if book.category == 'want_to_read' %}selected{% endif %}>Want To Read</option>
                         <option value="read" {% if book.category == 'read' %}selected{% endif %}>Books Read</option>
                     </select>
-                    <button type="submit">Update</button>
-                </form>
+                
+                    <button type="submit" name="action" value="update" class="form-button">Update</button>
+                    <button type="submit" name="action" value="remove" class="form-button">Remove</button>
+                </form>                
             </div>
             {% endfor %}
         </div>
@@ -95,3 +95,4 @@
 
 </body>
 </html>
+

@@ -10,21 +10,23 @@
 
 
     <header>
-        <div class="container">
-            <h1>Virtual Library</h1>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('library') }}">Library</a></li>
-                    <li><a href="{{ url_for('scanner') }}">Scan</a></li>
-                    <li>
-                        <form action="{{ url_for('logout') }}" method="get" style="display:inline;">
-                            <button type="submit">Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #c27058;">
+            <h1 style="color: white; margin: 0;">Virtual Library</h1>
+    
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <nav>
+                    <ul style="list-style: none; display: flex; gap: 20px; margin: 0; padding: 0;">
+                        <li><a href="{{ url_for('library') }}" style="color: white; text-decoration: none; font-weight: bold;">Library</a></li>
+                        <li><a href="{{ url_for('scanner') }}" style="color: white; text-decoration: none; font-weight: bold;">Scan</a></li>
+                    </ul>
+                </nav>
+                <form action="{{ url_for('logout') }}" method="get" style="margin: 0;">
+                    <button type="submit" style="padding: 8px 16px; border-radius: 10px; background-color: #e9a57b; border: none; font-weight: bold;">Logout</button>
+                </form>
+            </div>
         </div>
     </header>
+    
 
     <main class="container">
 
@@ -35,7 +37,8 @@
             <button onclick="searchBook()">Search</button>
         </div>
 
-        <div id="scanner" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+        <div id="scanner" style="width: 80%; height: 400px; margin: 20px auto; background: #000; border-radius: 10px;"></div>
+
 
         <div id="book-display" style="margin-top: 20px;"></div>
 
