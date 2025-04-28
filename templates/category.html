@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Library</title>
-    </head>
+<head>
+    <title>Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
 
-    <body>
-        <h1>My Library</h1>
+<body>
 
+    <header>
+        <div class="container">
+            <h1>Virtual Library</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('library') }}">Library</a></li>
+                    <li><a href="{{ url_for('scanner') }}">Scan</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+      
         <form action="{{ url_for('scanner') }}" method="get" style="display: inline;">
             <button type="submit">Go to Scanner</button>
         </form>
 
-        <!-- Show Books -->
-        <div class="filter">
+        <!-- Show Books Filter -->
+        <div class="filter" style="margin-top: 10px;">
             <label for="category">Show:</label>
             <select id="category">
                 <option value="">All</option>
@@ -20,11 +35,11 @@
                 <option value="read">Books Read</option>
             </select>
         </div>
+
+
         <div id="list">
             {% for book in books %}
-
-            <div class="book-container" data-category="{{ book.category }}" style="margin-bottom: 20px;">
-
+            <div class="book-container" data-category="{{ book.category }}" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
                 <!-- Book Info -->
                 <div class="book">
                     <h3>{{ book.title }}</h3>
@@ -39,9 +54,9 @@
                         {% endif %}
                     </p>
                 </div>
-            
-                <!-- Update Category Form -->
-                <form action="{{ url_for('update_category', book_id=book._id|string) }}" method="post">
+
+
+                <form action="{{ url_for('update_category', book_id=book._id|string) }}" method="post" class="form" style="margin-top: 10px;">
                     <label for="{{ loop.index }}">Category:</label>
                     <select name="category" id="{{ loop.index }}">
                         <option value="want_to_read" {% if book.category == 'want_to_read' %}selected{% endif %}>Want To Read</option>
@@ -50,31 +65,33 @@
                     <button type="submit">Update</button>
                 </form>
             </div>
-            
-        {% endfor %}
+            {% endfor %}
+        </div>
 
-        <script>
-            const categorySelect = document.getElementById('category');
-            const bookContainers = document.querySelectorAll('.book-container');
-        
-            function filterBooks() {
-                const selectedCategory = categorySelect.value;
-        
-                bookContainers.forEach(container => {
-                    const bookCategory = container.getAttribute('data-category');
-        
-                    if (selectedCategory === "" || bookCategory === selectedCategory) {
-                        container.style.display = "block";
-                    } else {
-                        container.style.display = "none";
-                    }
-                });
-            }
-        
-            categorySelect.addEventListener('change', filterBooks);
-            window.addEventListener('DOMContentLoaded', filterBooks);
-        </script>
-        
+    </main>
 
-    </body>
+
+    <script>
+        const categorySelect = document.getElementById('category');
+        const bookContainers = document.querySelectorAll('.book-container');
+
+        function filterBooks() {
+            const selectedCategory = categorySelect.value;
+
+            bookContainers.forEach(container => {
+                const bookCategory = container.getAttribute('data-category');
+
+                if (selectedCategory === "" || bookCategory === selectedCategory) {
+                    container.style.display = "block";
+                } else {
+                    container.style.display = "none";
+                }
+            });
+        }
+
+        categorySelect.addEventListener('change', filterBooks);
+        window.addEventListener('DOMContentLoaded', filterBooks);
+    </script>
+
+</body>
 </html>
