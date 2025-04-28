@@ -2,14 +2,31 @@
 <html>
 <head>
   <title>{{ book.title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <p><strong>{{ book.title }}</strong></p>
-  <p><strong>Author(s):</strong> {{ ", ".join(book.authors) }}</p>
-  {% if book.cover %}
-    <img src="{{ book.cover }}" alt="Cover of {{ book.title }} ">
-  {% else %}
-    <p>No cover image available.</p>
-  {% endif %}
+  <header>
+    <div class="container">
+      <h1>Virtual Library</h1>
+      <nav>
+          <ul>
+              <li><a href="{{ url_for('library') }}">Library</a></li>
+              <li><a href="{{ url_for('index') }}">Scan</a></li>
+          </ul>
+      </nav>
+  </div>
+  </header>
+
+  <main class="container">
+    <div class="book-card">
+      <p><strong>{{ book.title }}</strong></p>
+      <p><strong>Author(s):</strong> {{ ", ".join(book.authors) }}</p>
+      {% if book.cover %}
+      <img src="{{ book.cover }}" alt="Cover of {{ book.title }} ">
+      {% else %}
+      <p>No cover image available.</p>
+      {% endif %}
+    </div>
+  </main>
 </body>
 </html>
