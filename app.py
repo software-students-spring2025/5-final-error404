@@ -199,6 +199,18 @@ def update_category(book_id):
 
     return redirect(url_for("library"))
 
+@app.route("/library/<book_id>/note", methods=["POST"])
+@flask_login.login_required
+def update_note(book_id):
+    user_email = flask_login.current_user.id
+    note = request.form.get("note", "")
+    
+    books_collection.update_one(
+        {"_id": ObjectId(book_id), "owner": user_email},
+        {"$set": {"notes": note}}
+    )
+    return redirect(url_for("library"))
+
 @app.route("/save_book", methods=["POST"])
 @flask_login.login_required
 def save_book():
@@ -216,7 +228,8 @@ def save_book():
         "authors": authors,
         "isbn": isbn,
         "cover": cover,
-        "category": None
+        "category": None,
+        "notes": "",
     })
 
     return redirect(url_for("library")) 
