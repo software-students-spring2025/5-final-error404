@@ -14,19 +14,21 @@ client = MongoClient(DB_URI)
 db = client[DB_NAME]
 
 users_collection = db["users"]
-users_collection.create_index("email", unique = True)
+users_collection.create_index("email", unique=True)
 
 books_collection = db["books"]
 
 app = Flask(__name__, template_folder="templates")
-app.secret_key = os.getenv("SECRET_KEY", "supersecret")  
+app.secret_key = os.getenv("SECRET_KEY", "supersecret")
 
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = "login"
+
 
 class User(flask_login.UserMixin):
     pass
+
 
 @login_manager.user_loader
 def user_loader(email):
@@ -37,9 +39,10 @@ def user_loader(email):
     user.id = email
     return user
 
+
 @login_manager.request_loader
 def request_loader(request):
-    email = request.form.get('email')
+    email = request.form.get("email")
     user_data = users_collection.find_one({"email": email})
     if not user_data:
         return None
@@ -47,23 +50,26 @@ def request_loader(request):
     user.id = email
     return user
 
+
 @login_manager.unauthorized_handler
 def unauthorized_handler():
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
 
-@app.route('/')
+
+@app.route("/")
 def home():
     if not flask_login.current_user.is_authenticated:
-        return redirect(url_for('login'))  # Redirect to login if not logged in
-    return render_template('scanner.html')
+        return redirect(url_for("login"))  # Redirect to login if not logged in
+    return render_template("scanner.html")
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'GET':
-        return render_template('login.html')
+    if request.method == "GET":
+        return render_template("login.html")
 
-    email = request.form['email']
-    password = request.form['password']
+    email = request.form["email"]
+    password = request.form["password"]
 
     user_data = users_collection.find_one({"email": email, "password": password})
 
@@ -71,28 +77,31 @@ def login():
         user = User()
         user.id = email
         flask_login.login_user(user)
-        return redirect(url_for('home'))
+        return redirect(url_for("home"))
 
-    return 'Bad login'
+    return "Bad login"
 
-@app.route('/register', methods=['GET', 'POST'])
+
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == 'GET':
-        return render_template('register.html')
+    if request.method == "GET":
+        return render_template("register.html")
 
-    email = request.form['email']
-    password = request.form['password']
+    email = request.form["email"]
+    password = request.form["password"]
 
     if users_collection.find_one({"email": email}):
-        return 'User already exists'
+        return "User already exists"
 
     users_collection.insert_one({"email": email, "password": password})
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
 
-@app.route('/logout')
+
+@app.route("/logout")
 def logout():
     flask_login.logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
+
 
 @app.route("/scanner")
 @flask_login.login_required
@@ -100,6 +109,7 @@ def scanner():
     user_email = flask_login.current_user.id
     books = list(books_collection.find({"owner": user_email}))
     return render_template("scanner.html", books=books)
+
 
 # This handles extracting the isbn and using it to search for the book on OpenLibrary
 @app.route("/items/<isbn>")
@@ -128,7 +138,8 @@ def get_book_info(isbn):
 
     return render_template("book.html", book=book)
 
-#This handles searching for books using the OpenLibrary API via title, author or isbn
+
+# This handles searching for books using the OpenLibrary API via title, author or isbn
 @app.route("/search")
 @flask_login.login_required
 def search_books():
@@ -173,12 +184,14 @@ def search_books():
 
     return render_template("searches.html", books=books)
 
+
 @app.route("/library")
 @flask_login.login_required
 def library():
     user_email = flask_login.current_user.id
     books = list(books_collection.find({"owner": user_email}))
     return render_template("category.html", books=books)
+
 
 @app.route("/library/<book_id>/category", methods=["POST"])
 @flask_login.login_required
@@ -190,61 +203,61 @@ def update_category(book_id):
         category = request.form.get("category")
         books_collection.update_one(
             {"_id": ObjectId(book_id), "owner": user_email},
-            {"$set": {"category": category}}
+            {"$set": {"category": category}},
         )
     elif action == "remove":
-        books_collection.delete_one(
-            {"_id": ObjectId(book_id), "owner": user_email}
-        )
+        books_collection.delete_one({"_id": ObjectId(book_id), "owner": user_email})
 
     return redirect(url_for("library"))
+
 
 @app.route("/library/<book_id>/note", methods=["POST"])
 @flask_login.login_required
 def update_note(book_id):
     user_email = flask_login.current_user.id
     note = request.form.get("note", "")
-    
+
     books_collection.update_one(
-        {"_id": ObjectId(book_id), "owner": user_email},
-        {"$set": {"notes": note}}
+        {"_id": ObjectId(book_id), "owner": user_email}, {"$set": {"notes": note}}
     )
     return redirect(url_for("library"))
+
 
 @app.route("/save_book", methods=["POST"])
 @flask_login.login_required
 def save_book():
     data = request.form
     title = data.get("title")
-    authors = data.getlist("authors")  
+    authors = data.getlist("authors")
     isbn = data.get("isbn")
     cover = data.get("cover")
 
     user_email = flask_login.current_user.id
 
-    books_collection.insert_one({
-        "owner": user_email,
-        "title": title,
-        "authors": authors,
-        "isbn": isbn,
-        "cover": cover,
-        "category": None,
-        "notes": "",
-    })
+    books_collection.insert_one(
+        {
+            "owner": user_email,
+            "title": title,
+            "authors": authors,
+            "isbn": isbn,
+            "cover": cover,
+            "category": None,
+            "notes": "",
+        }
+    )
 
-    return redirect(url_for("library")) 
+    return redirect(url_for("library"))
+
 
 @app.route("/library/<book_id>/remove", methods=["POST"])
 @flask_login.login_required
 def remove_book(book_id):
     user_email = flask_login.current_user.id
 
-    books_collection.delete_one({
-        "_id": ObjectId(book_id),
-        "owner": user_email
-    })
+    books_collection.delete_one({"_id": ObjectId(book_id), "owner": user_email})
 
     return redirect(url_for("library"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
