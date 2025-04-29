@@ -1,5 +1,6 @@
 import pytest
 from app import app, users_collection, books_collection
+from flask import url_for
 from unittest.mock import patch
 
 
@@ -25,10 +26,40 @@ def test_register(client):
     assert b"Register" in response.data
 
 
+def test_register_success(client):
+    users_collection.delete_many({})
+    
+    response = client.post("/register", data={
+        "email": "newuser@example.com",
+        "password": "newuserpassword123"
+    }, follow_redirects=False)
+
+    assert response.status_code == 302
+    assert "/login" in response.location
+
+    user = users_collection.find_one({"email": "newuser@example.com"})
+    assert user is not None
+    assert user["password"] == "newuserpassword123"
+
+
 def test_login(client):
     response = client.get("/login")
     assert response.status_code == 200
     assert b"Login" in response.data
+
+
+def test_login_success(client):
+    response = client.post("/login", data={
+        "email": "testuser@example.com",
+        "password": "testpassword"
+    }, follow_redirects=False)
+    
+    assert response.status_code == 302
+    assert response.location.endswith(url_for("home"))
+    
+    with client.session_transaction() as sess:
+        assert "_user_id" in sess
+        assert sess["_user_id"] == "testuser@example.com"
 
 
 def test_logout(client):
@@ -117,3 +148,56 @@ def test_camera(client):
     html = response.data.decode()
     assert "https://unpkg.com/@ericblade/quagga2" in html
     assert "Quagga.init" in html
+
+def test_update_note_success(client):
+    book_id = books_collection.insert_one({
+        "owner": "testuser@example.com",
+        "title": "Test Book",
+        "authors": ["Test Author"],
+        "notes": "Test Note"
+    }).inserted_id
+
+    response = client.post(
+        f"/library/{book_id}/note",
+        data={"note": "New Updated Test Note"}
+    )
+
+    assert response.status_code == 302
+    updated_book = books_collection.find_one({"_id": book_id})
+    assert updated_book["notes"] == "New Updated Test Note"
+
+
+def test_update_note_unauthorized(client):
+    book_id = books_collection.insert_one({
+        "owner": "anotheruser@example.com",
+        "title": "Another Book",
+        "authors": ["Another Author"],
+        "notes": "Another Note"
+    }).inserted_id
+
+    response = client.post(
+        f"/library/{book_id}/note",
+        data={"note": "Test Note"}
+    )
+
+    assert response.status_code == 302
+    unchanged_book = books_collection.find_one({"_id": book_id})
+    assert unchanged_book["notes"] == "Another Note"
+
+
+def test_update_note_empty(client):
+    book_id = books_collection.insert_one({
+        "owner": "testuser@example.com",
+        "title": "Test Book",
+        "authors": ["Test Author"],
+        "notes": "Test Note"
+    }).inserted_id
+
+    response = client.post(
+        f"/library/{book_id}/note",
+        data={"note": ""}
+    )
+
+    assert response.status_code == 302
+    updated_book = books_collection.find_one({"_id": book_id})
+    assert updated_book["notes"] == ""
