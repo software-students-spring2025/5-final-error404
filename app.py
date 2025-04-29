@@ -173,7 +173,6 @@ def search_books():
 
     return render_template("searches.html", books=books)
 
-# Displays saved books
 @app.route("/library")
 @flask_login.login_required
 def library():
@@ -181,17 +180,22 @@ def library():
     books = list(books_collection.find({"owner": user_email}))
     return render_template("category.html", books=books)
 
-# Update Book Category
 @app.route("/library/<book_id>/category", methods=["POST"])
 @flask_login.login_required
 def update_category(book_id):
-    category = request.form.get("category")
     user_email = flask_login.current_user.id
+    action = request.form.get("action")
 
-    books_collection.update_one(
-        {"_id": ObjectId(book_id), "owner": user_email},
-        {"$set": {"category": category}}
-    )
+    if action == "update":
+        category = request.form.get("category")
+        books_collection.update_one(
+            {"_id": ObjectId(book_id), "owner": user_email},
+            {"$set": {"category": category}}
+        )
+    elif action == "remove":
+        books_collection.delete_one(
+            {"_id": ObjectId(book_id), "owner": user_email}
+        )
 
     return redirect(url_for("library"))
 
@@ -200,14 +204,11 @@ def update_category(book_id):
 def save_book():
     data = request.form
     title = data.get("title")
-    authors = data.getlist("authors")
+    authors = data.getlist("authors")  
     isbn = data.get("isbn")
     cover = data.get("cover")
 
     user_email = flask_login.current_user.id
-
-    if not title or not isbn:
-        return "Missing book info", 400
 
     books_collection.insert_one({
         "owner": user_email,
@@ -215,7 +216,19 @@ def save_book():
         "authors": authors,
         "isbn": isbn,
         "cover": cover,
-        "category": "want_to_read" 
+        "category": None
+    })
+
+    return redirect(url_for("library")) 
+
+@app.route("/library/<book_id>/remove", methods=["POST"])
+@flask_login.login_required
+def remove_book(book_id):
+    user_email = flask_login.current_user.id
+
+    books_collection.delete_one({
+        "_id": ObjectId(book_id),
+        "owner": user_email
     })
 
     return redirect(url_for("library"))
