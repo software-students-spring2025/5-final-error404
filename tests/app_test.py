@@ -26,9 +26,9 @@ def test_register(client):
     assert b"Register" in response.data
 
 
-def test_register_success(client):
-    users_collection.delete_many({})
-    
+def test_register_success(client):    
+    users_collection.delete_one({"email": "newuser@example.com"});
+
     response = client.post("/register", data={
         "email": "newuser@example.com",
         "password": "newuserpassword123"
