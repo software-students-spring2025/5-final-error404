@@ -1,15 +1,18 @@
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <h2>Register</h2>
-    <form action="{{ url_for('register') }}" method="POST">
+<body class="auth-page">
+    <div class="auth-container">
+      <h2>Register</h2>
+      <form action="{{ url_for('register') }}" method="POST">
         <input type="text" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
-</body>
+      </form>
+      <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+  </body>
+  
 </html>
