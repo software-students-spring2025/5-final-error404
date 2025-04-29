@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: mahmouds1201/errorlibrary-app:latest
+    container_name: errorlibrary-app
     ports:
-      - "5001:5001"
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-    restart: unless-stopped
+      - "80:5000"                                
+    environment:
+      - FLASK_ENV=production
+      - MONGO_URI=mongodb://209.97.157.249:27017
+    restart: always                               
