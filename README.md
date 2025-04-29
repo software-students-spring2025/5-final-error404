@@ -1,10 +1,8 @@
-![CI/CD](https://github.com/software-students-spring2025/5-final-error404/actions/workflows/app-cicd.yml/badge.svg) 
+![CI/CD](https://github.com/software-students-spring2025/5-final-error404/actions/workflows/app-cicd.yml/badge.svg)
 
 # Documentation
 
-This app allows users to capture images using a webcam. A separate ML client
-identifies the fruit in the image and reads out the identification, assisting
-visually impaired users or kids who are in the process of learning which fruits are what.
+This app allows users to use their webcam to scan barcodes of books and/or search them up to add to their virtual library. They can then organize these books between "Want to Read" and "Books Read." If you ever find a book out in public or in the library that you want to keep track of and remember, this is a great application for that!
 
 ## Installation
 
