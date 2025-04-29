@@ -85,11 +85,6 @@ Either one of these dockerhub links can be used - multiple group members uploade
 1. [🔗 errorlibrary-app](https://hub.docker.com/r/syed1naqvi/errorlibrary-app)<br/>
 2. [🔗 errorlibrary-app](https://hub.docker.com/r/mahmouds1201/errorlibrary-app)
 
-## Deployed Demo
-
-Link: [🔗 Click Here](https://errorlibrary.loca.lt/login)<br />
-Password: 216.165.95.132
-
 ## Team Members
 [Mahmoud Shehata](https://github.com/MahmoudS1201) <br /> 
 [Marcos Huh](https://github.com/mh6355) <br />
