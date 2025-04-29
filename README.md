@@ -62,6 +62,11 @@ sudo apt install docker-compose     # download docker for Windows
 docker-compose up --build           # run the docker containers
 ```
 
+To run the program, use:
+```
+python3 app.py
+```
+
 ### 3. Run Tests
 Ensure everything works - make sure you are in the correct directories before running these commands:
 ```
