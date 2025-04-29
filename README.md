@@ -1,4 +1,4 @@
-![CI/CD](https://github.com/software-students-spring2025/5-final-error404/actions/workflows/app-cicd.yml/badge.svg)
+![CI/CD](https://github.com/software-students-spring2025/5-final-error404/actions/workflows/app-cicd.yml/badge.svg) 
 
 # Documentation
 
