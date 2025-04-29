@@ -7,8 +7,8 @@ import requests
 from bson.objectid import ObjectId
 
 load_dotenv()
-DB_URI = os.getenv("URI")
-DB_NAME = os.getenv("DBNAME")
+DB_URI = os.getenv("URI", "mongodb://localhost:27017")
+DB_NAME = os.getenv("DBNAME", "testdb")
 
 client = MongoClient(DB_URI)
 db = client[DB_NAME]
