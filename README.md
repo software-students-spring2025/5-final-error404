@@ -86,7 +86,7 @@ Either one of these dockerhub links can be used - multiple group members uploade
 2. [🔗 errorlibrary-app](https://hub.docker.com/r/mahmouds1201/errorlibrary-app)
 
 ## Deployed App Link (No Camera)
-Because our repo was forked from Professor Bloombergs, and we do not own the repo, we were unable to apply https:// security and the camera does not work. However, all other feautrs work and can be accessed from this publicly deployed link: <br/>
+Due to our repo being forked from Professor Bloomberg's repo, we do not own the repo and therefore, we were unable to apply https:// security causing the camera to not work. However, all other features work and can be accessed from this publicly deployed link: <br/>
 
 [errorlibrary-app](http://209.97.157.249:5001)
 
